@@ -46,7 +46,6 @@ clf.fit(train_vectors, train_df["target"])
 
 # Read submission file
 sample_submission = pd.read_csv("../input/nlp-getting-started/sample_submission.csv")
-sample_submission
 
 # Fill the target column
 sample_submission["target"] = clf.predict(test_vectors)
