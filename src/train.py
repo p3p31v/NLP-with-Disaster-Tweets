@@ -36,7 +36,6 @@ clf = linear_model.RidgeClassifier()
 
 # Cross-validation and scores
 scores = model_selection.cross_val_score(clf, train_vectors, train_df["target"], cv=3, scoring="f1")
-scores
 
 # Predictions
 clf.fit(train_vectors, train_df["target"])
@@ -49,7 +48,6 @@ sample_submission = pd.read_csv("../input/nlp-getting-started/sample_submission.
 
 # Fill the target column
 sample_submission["target"] = clf.predict(test_vectors)
-sample_submission.head()
 
 # Export submission to csv file
 
