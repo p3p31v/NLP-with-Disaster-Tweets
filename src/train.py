@@ -4,51 +4,75 @@
 import joblib
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
-from sklearn import feature_extraction, linear_model, model_selection, preprocessing
+from sklearn import linear_model, model_selection, metrics
+from sklearn.feature_extraction.text import CountVectorizer
 from datetime import datetime
+from nltk.tokenize import word_tokenize
 
 # Import data
-train_df = pd.read_csv("../input/nlp-getting-started/train.csv")
-test_df = pd.read_csv("../input/nlp-getting-started/test.csv")
+df = pd.read_csv("../input/nlp-getting-started/train.csv")
 
-# Building vectors
-count_vectorizer = feature_extraction.text.CountVectorizer()
+# We create a new column called kfold and fill it with -1
+df["kfold"] = -1
 
-# Now let's create vectors for all of our tweets.
-train_vectors = count_vectorizer.fit_transform(train_df["text"])
+# The next step is to randomize the rows of the data 
+df = df.sample(frac=1).reset_index(drop=True)
 
-"""
-    note that we're NOT using .fit_transform() here. Using just .transform() makes sure
-    that the tokens in the train vectors are the only ones mapped to the test vectors - 
-    i.e. that the train and test vectors use the same set of tokens.
-"""
+# Fetch labels
+y = df["target"].values
 
-test_vectors = count_vectorizer.transform(test_df["text"])
+# Initiate the kfold class from model_selection module
+kf = model_selection.StratifiedKFold(n_splits=5)
 
-# Our model
-"""
-    Our vectors are really big, so we want to push our model's weights
-    toward 0 without completely discounting different words - ridge regression 
-    is a good way to do this.
-"""
+# Fill the new fold column
+for f,(t_,v_) in enumerate(kf.split(X=df,y=y)):
+    df.loc[v_,"kfold"] = f
 
-clf = linear_model.RidgeClassifier()
+# We go over the folds created
+for fold_ in range(5):
+    # temporary dataframes from train and test
+    train_df = df[df.kfold != fold_].reset_index(drop=True)
+    test_df = df[df.kfold == fold_].reset_index(drop=True)
 
-# Cross-validation and scores
-scores = model_selection.cross_val_score(clf, train_vectors, train_df["target"], cv=3, scoring="f1")
+    # Initialize CountVectorizer with NLTK's word_tokenize
+    # Function as tokenizer
+    count_vec = CountVectorizer(tokenizer=word_tokenize,token_pattern=None)
 
-# Predictions
-clf.fit(train_vectors, train_df["target"])
+    # Fit count_vec on training data
+    count_vec.fit(train_df["text"])
 
-# save the model
-# joblib.dump(clf,f"../models/model_{datetime.now()}.bin")
+    # Transform training and validation data 
+    xtrain = count_vec.transform(train_df["text"])
+    xtest = count_vec.transform(test_df["text"])
 
-# Read submission file
+    # Initialize logistic regression model
+    model = linear_model.LogisticRegression(solver='lbfgs', max_iter=1000)
+    
+    # Fit the model on training data and target
+    model.fit(xtrain, train_df["target"])
+
+    # Make preditions on test data
+    # Threshold for predictions is 0.5
+    preds = model.predict(xtest)
+
+    # Calculate f1
+    f1 = metrics.f1_score(test_df["target"],preds)
+
+    print(f"Fold: {fold_}")
+    print(f"f1 score = {f1}")
+    print("")
+
+# Import sample submission
 sample_submission = pd.read_csv("../input/nlp-getting-started/sample_submission.csv")
 
-# Fill the target column
-sample_submission["target"] = clf.predict(test_vectors)
+# Import test competition data
+test = pd.read_csv("../input/nlp-getting-started/test.csv")
 
-# Export submission to csv file
+# Convert test competition data to vectors
+test = count_vec.transform(test["text"])
 
+# Predict 
+sample_submission["target"] = model.predict(test)
+
+# Create submission file
 sample_submission.to_csv("submission.csv", index=False)
