@@ -16,7 +16,7 @@ df = pd.read_csv("../input/nlp-getting-started/train.csv")
 df["kfold"] = -1
 
 # The next step is to randomize the rows of the data 
-df = df.sample(frac=1).reset_index(drop=True)
+df = df.sample(frac=1,random_state=42).reset_index(drop=True)
 
 # Fetch labels
 y = df["target"].values
@@ -27,6 +27,9 @@ kf = model_selection.StratifiedKFold(n_splits=5)
 # Fill the new fold column
 for f,(t_,v_) in enumerate(kf.split(X=df,y=y)):
     df.loc[v_,"kfold"] = f
+
+# Initialize f1 score list
+f1_scores = []
 
 # We go over the folds created
 for fold_ in range(5):
@@ -58,9 +61,16 @@ for fold_ in range(5):
     # Calculate f1
     f1 = metrics.f1_score(test_df["target"],preds)
 
+    # Print some results
     print(f"Fold: {fold_}")
     print(f"f1 score = {f1}")
     print("")
+
+    f1_scores.append(f1)
+
+# Print average
+average = sum(f1_scores)/5
+print (f"Average: {average}")
 
 # Import sample submission
 sample_submission = pd.read_csv("../input/nlp-getting-started/sample_submission.csv")
