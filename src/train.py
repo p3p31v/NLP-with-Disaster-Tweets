@@ -68,6 +68,9 @@ for fold_ in range(5):
 
     f1_scores.append(f1)
 
+    # save the model
+    joblib.dump(model,f"../models/model_{fold_}_{datetime.now()}")
+
 # Print average
 average = sum(f1_scores)/5
 print (f"Average: {average}")
