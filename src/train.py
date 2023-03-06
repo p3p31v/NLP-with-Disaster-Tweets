@@ -5,9 +5,10 @@ import joblib
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 from sklearn import linear_model, model_selection, metrics
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from datetime import datetime
 from nltk.tokenize import word_tokenize
+from nltk import ngrams
 
 # Import data
 df = pd.read_csv("../input/nlp-getting-started/train.csv")
@@ -39,7 +40,7 @@ for fold_ in range(5):
 
     # Initialize CountVectorizer with NLTK's word_tokenize
     # Function as tokenizer
-    count_vec = CountVectorizer(tokenizer=word_tokenize,token_pattern=None)
+    count_vec = CountVectorizer(tokenizer=word_tokenize,token_pattern=None,ngram_range=(1,3))
 
     # Fit count_vec on training data
     count_vec.fit(train_df["text"])
