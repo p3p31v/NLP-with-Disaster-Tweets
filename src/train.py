@@ -14,8 +14,21 @@ from nltk.corpus import stopwords
 import string
 import nltk
 
+#Function to remove irrelevant data
+def clean_tweet(tweet):
+    # Remove URLs
+    tweet = re.sub(r'http\S+', '', tweet)
+    # Remove user mentions
+    tweet = re.sub(r'@[^\s]+', '', tweet)
+    # Remove hashtags
+    tweet = re.sub(r'#([^\s]+)', r'\1', tweet)
+    return tweet
+
 # Import data
 df = pd.read_csv("../input/nlp-getting-started/train.csv")
+
+#We apply the function to remove irrelevant data to the text column of the train dataset
+df['text'] = [clean_tweet(tweet) for tweet in df['text']]
 
 #we remove the punctuation for each tweet
 df['text'] = df['text'].apply(lambda x: re.sub('[%s]' % re.escape(string.punctuation), '', x))
@@ -96,6 +109,9 @@ sample_submission = pd.read_csv("../input/nlp-getting-started/sample_submission.
 
 # Import test competition data
 test = pd.read_csv("../input/nlp-getting-started/test.csv")
+
+#We apply the function to remove irrelevant data to the text column of the test dataset
+test['text'] = [clean_tweet(tweet) for tweet in test['text']]
 
 #remove punctuation
 test['text'] = test['text'].apply(lambda x: re.sub('[%s]' % re.escape(string.punctuation), '', x))
