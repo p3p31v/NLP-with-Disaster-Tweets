@@ -5,13 +5,28 @@ import joblib
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 from sklearn import linear_model, model_selection, metrics
+import re #regular expressions
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from datetime import datetime
 from nltk.tokenize import word_tokenize
 from nltk import ngrams
+from nltk.corpus import stopwords
+import string
+import nltk
 
 # Import data
 df = pd.read_csv("../input/nlp-getting-started/train.csv")
+
+#we remove the punctuation for each tweet
+df['text'] = df['text'].apply(lambda x: re.sub('[%s]' % re.escape(string.punctuation), '', x))
+
+#stopwords set defined
+nltk.download('stopwords')
+nltk.download('punkt')
+stop_words = set(stopwords.words('english'))
+
+#deletion of stopwords
+df['text'] = df['text'].apply(lambda x: ' '.join([word for word in x.split() if word.lower() not in stop_words]))
 
 # We create a new column called kfold and fill it with -1
 df["kfold"] = -1
@@ -81,6 +96,12 @@ sample_submission = pd.read_csv("../input/nlp-getting-started/sample_submission.
 
 # Import test competition data
 test = pd.read_csv("../input/nlp-getting-started/test.csv")
+
+#remove punctuation
+test['text'] = test['text'].apply(lambda x: re.sub('[%s]' % re.escape(string.punctuation), '', x))
+
+#deletion of stopwords
+test['text'] = test['text'].apply(lambda x: ' '.join([word for word in x.split() if word.lower() not in stop_words]))
 
 # Convert test competition data to vectors
 test = count_vec.transform(test["text"])
