@@ -25,11 +25,13 @@ def clean_tweet(tweet):
     return tweet
 
 # Import data
-df = pd.read_csv("../input/nlp-getting-started/train.csv")
+df = pd.read_csv("input/nlp-getting-started/train.csv")
+
+#We turn all capital letters to lowecase
+df['text'] = df['text'].str.lower()
 
 #We apply the function to remove irrelevant data to the text column of the train dataset
 df['text'] = [clean_tweet(tweet) for tweet in df['text']]
-
 #we remove the punctuation for each tweet
 df['text'] = df['text'].apply(lambda x: re.sub('[%s]' % re.escape(string.punctuation), '', x))
 
@@ -40,6 +42,9 @@ stop_words = set(stopwords.words('english'))
 
 #deletion of stopwords
 df['text'] = df['text'].apply(lambda x: ' '.join([word for word in x.split() if word.lower() not in stop_words]))
+
+#We turn all caputal letters to lowercase
+df['text'].lower()
 
 # We create a new column called kfold and fill it with -1
 df["kfold"] = -1
