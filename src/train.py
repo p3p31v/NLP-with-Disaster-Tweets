@@ -13,6 +13,7 @@ from nltk import ngrams
 from nltk.corpus import stopwords
 import string
 import nltk
+from nltk.stem import PorterStemmer
 
 #Function to remove irrelevant data
 def clean_tweet(tweet):
@@ -43,9 +44,12 @@ stop_words = set(stopwords.words('english'))
 #deletion of stopwords
 df['text'] = df['text'].apply(lambda x: ' '.join([word for word in x.split() if word.lower() not in stop_words]))
 
-#We turn all caputal letters to lowercase
-df['text'].lower()
-
+#Stemming
+stemmer = PorterStemmer() #to initialize the stemmer
+stemmed_words = [stemmer.stem(word) for word in df['text']] #Stem each word in the list
+for i in range(len(df['text'])):
+    print(df['text'][i], "->", stemmed_words[i]) #Print the original and stemmed words
+    
 # We create a new column called kfold and fill it with -1
 df["kfold"] = -1
 
