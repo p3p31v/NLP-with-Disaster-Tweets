@@ -13,38 +13,31 @@ from nltk import ngrams
 from nltk.corpus import stopwords
 import string
 import nltk
-from nltk.stem import PorterStemmer
 
 # Stopwords set defined
 nltk.download('stopwords')
-nltk.download('punkt')
 stop_words = set(stopwords.words('english'))
-
-# Initialization of Stemmer
-stemmer = PorterStemmer() #to initialize the stemmer
 
 #Function to remove irrelevant data
 def clean_tweet(tweet):
 
     # Capital letters to lowercase
-    tweet = tweet.str.lower()
-    # Remove punctuation
-    tweet = tweet.apply(lambda x: re.sub('[%s]' % re.escape(string.punctuation), '', x))
-    # Remove stopwords
-    tweet = tweet.apply(lambda x: ' '.join([word for word in x.split() if word not in stop_words]))
+    tweet = tweet.lower()
     # Remove URLs
     tweet = re.sub(r'http\S+', '', tweet)
     # Remove user mentions
     tweet = re.sub(r'@[^\s]+', '', tweet)
     # Remove hashtags
     tweet = re.sub(r'#([^\s]+)', r'\1', tweet)
-    # Stemming
-    #tweet = [stemmer.stem(word) for word in df['text']] 
+    # Remove punctuation
+    tweet = re.sub('[%s]' % re.escape(string.punctuation), '', tweet)
+    # Remove stopwords
+    tweet = ' '.join([word for word in tweet.split() if word not in stop_words])
 
     return tweet
 
 # Import data
-df = pd.read_csv("input/nlp-getting-started/train.csv")
+df = pd.read_csv("../input/nlp-getting-started/train.csv")
 
 # We apply the function to remove irrelevant data to the text column of the train dataset
 df['text'] = [clean_tweet(tweet) for tweet in df['text']]
