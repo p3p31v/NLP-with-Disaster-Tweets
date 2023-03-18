@@ -15,40 +15,39 @@ import string
 import nltk
 from nltk.stem import PorterStemmer
 
+# Stopwords set defined
+nltk.download('stopwords')
+nltk.download('punkt')
+stop_words = set(stopwords.words('english'))
+
+# Initialization of Stemmer
+stemmer = PorterStemmer() #to initialize the stemmer
+
 #Function to remove irrelevant data
 def clean_tweet(tweet):
+
+    # Capital letters to lowercase
+    tweet = tweet.str.lower()
+    # Remove punctuation
+    tweet = tweet.apply(lambda x: re.sub('[%s]' % re.escape(string.punctuation), '', x))
+    # Remove stopwords
+    tweet = tweet.apply(lambda x: ' '.join([word for word in x.split() if word not in stop_words]))
     # Remove URLs
     tweet = re.sub(r'http\S+', '', tweet)
     # Remove user mentions
     tweet = re.sub(r'@[^\s]+', '', tweet)
     # Remove hashtags
     tweet = re.sub(r'#([^\s]+)', r'\1', tweet)
+    # Stemming
+    #tweet = [stemmer.stem(word) for word in df['text']] 
+
     return tweet
 
 # Import data
 df = pd.read_csv("input/nlp-getting-started/train.csv")
 
-#We turn all capital letters to lowecase
-df['text'] = df['text'].str.lower()
-
-#We apply the function to remove irrelevant data to the text column of the train dataset
+# We apply the function to remove irrelevant data to the text column of the train dataset
 df['text'] = [clean_tweet(tweet) for tweet in df['text']]
-#we remove the punctuation for each tweet
-df['text'] = df['text'].apply(lambda x: re.sub('[%s]' % re.escape(string.punctuation), '', x))
-
-#stopwords set defined
-nltk.download('stopwords')
-nltk.download('punkt')
-stop_words = set(stopwords.words('english'))
-
-#deletion of stopwords
-df['text'] = df['text'].apply(lambda x: ' '.join([word for word in x.split() if word.lower() not in stop_words]))
-
-#Stemming
-stemmer = PorterStemmer() #to initialize the stemmer
-stemmed_words = [stemmer.stem(word) for word in df['text']] #Stem each word in the list
-for i in range(len(df['text'])):
-    print(df['text'][i], "->", stemmed_words[i]) #Print the original and stemmed words
     
 # We create a new column called kfold and fill it with -1
 df["kfold"] = -1
@@ -107,7 +106,7 @@ for fold_ in range(5):
     f1_scores.append(f1)
 
     # save the model
-    joblib.dump(model,f"../models/model_{fold_}_{datetime.now()}")
+    #joblib.dump(model,f"../models/model_{fold_}_{datetime.now()}")
 
 # Print average
 average = sum(f1_scores)/5
@@ -121,12 +120,6 @@ test = pd.read_csv("../input/nlp-getting-started/test.csv")
 
 #We apply the function to remove irrelevant data to the text column of the test dataset
 test['text'] = [clean_tweet(tweet) for tweet in test['text']]
-
-#remove punctuation
-test['text'] = test['text'].apply(lambda x: re.sub('[%s]' % re.escape(string.punctuation), '', x))
-
-#deletion of stopwords
-test['text'] = test['text'].apply(lambda x: ' '.join([word for word in x.split() if word.lower() not in stop_words]))
 
 # Convert test competition data to vectors
 test = count_vec.transform(test["text"])
