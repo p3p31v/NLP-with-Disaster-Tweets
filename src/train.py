@@ -36,8 +36,17 @@ def clean_tweet(tweet):
 
     return tweet
 
+#Function to add keywords
+def clean_keyword(keyword):
+
+    # Convert to string and replace %20 for space
+    return str(keyword).replace('%20',' ')
+
 # Import data
 df = pd.read_csv("../input/nlp-getting-started/train.csv")
+
+# We apply the fuction to remove irrelevant data to the keywords column of the train dataset
+df['keyword'] = [clean_keyword(keyword) for keyword in df['keyword']]
 
 # We apply the function to remove irrelevant data to the text column of the train dataset
 df['text'] = [clean_tweet(tweet) for tweet in df['text']]
@@ -110,6 +119,9 @@ sample_submission = pd.read_csv("../input/nlp-getting-started/sample_submission.
 
 # Import test competition data
 test = pd.read_csv("../input/nlp-getting-started/test.csv")
+
+# We apply the fuction to remove irrelevant data to the keywords column of the train dataset
+test['keyword'] = [clean_keyword(keyword) for keyword in test['keyword']]
 
 #We apply the function to remove irrelevant data to the text column of the test dataset
 test['text'] = [clean_tweet(tweet) for tweet in test['text']]
