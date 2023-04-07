@@ -80,7 +80,7 @@ for fold_ in range(5):
 
     # Initialize CountVectorizer with NLTK's word_tokenize
     # Function as tokenizer
-    count_vec = CountVectorizer(tokenizer=word_tokenize,token_pattern=None,ngram_range=(1,3))
+    count_vec = CountVectorizer(tokenizer=word_tokenize,token_pattern=None,ngram_range=(1,2))
 
     # Fit count_vec on training data
     count_vec.fit(train_df["text"])
