@@ -37,6 +37,8 @@ def clean_tweet(tweet):
     tweet = ' '.join([word for word in tweet.split() if word not in stop_words])
     # Remove numbers
     tweet = re.sub('[0-9]+', '', tweet)
+    # Remove leftover punctuation (non-alphabetical symbols in words)
+    tweet = [word for word in tweet if word.isalpha()]
 
     return tweet
 
