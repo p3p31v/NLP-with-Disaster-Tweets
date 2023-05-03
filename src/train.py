@@ -7,6 +7,7 @@ import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 from sklearn import linear_model, model_selection, metrics
 import re #regular expressions
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.preprocessing import StandardScaler
 from datetime import datetime
 from nltk.tokenize import word_tokenize
 from nltk import ngrams
@@ -40,7 +41,7 @@ def clean_tweet(tweet):
     #Remove letters from other languages
     tweet = re.sub(r'[^\x00-\x7F]+', '', tweet)
     #Remove non-letters
-    tweet = re.sub(r'[^A-Za-z0-9()!?\'\`\']', ' ', regex = True)
+    tweet = re.sub(r'[^A-Za-z0-9()!?\'\`\']', '', tweet)
 
     return tweet
 
@@ -94,6 +95,11 @@ for fold_ in range(5):
     # Transform training and validation data 
     xtrain = count_vec.transform(train_df["text"])
     xtest = count_vec.transform(test_df["text"])
+
+    # Perform feature scaling (Standard Scaler)
+    scaler = StandardScaler()
+    xtrain = scaler.fit_transform(xtrain.toarray())
+    xtest = scaler.transform(xtest.toarray())
 
     # Initialize logistic regression model
     model = linear_model.LogisticRegression(solver='lbfgs', max_iter=1000)
