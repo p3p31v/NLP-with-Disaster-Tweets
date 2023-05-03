@@ -39,6 +39,8 @@ def clean_tweet(tweet):
     tweet = re.sub('[0-9]+', '', tweet)
     #Remove letters from other languages
     tweet = re.sub(r'[^\x00-\x7F]+', '', tweet)
+    #Remove non-letters
+    tweet = re.sub(r'[^A-Za-z0-9()!?\'\`\']', ' ', regex = True)
 
     return tweet
 
