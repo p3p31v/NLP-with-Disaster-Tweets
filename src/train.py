@@ -35,17 +35,8 @@ def clean_tweet(tweet):
     tweet = re.sub('rt','',tweet)
     # Remove stopwords
     tweet = ' '.join([word for word in tweet.split() if word not in stop_words])
-<<<<<<< HEAD
-    # Remove numbers
-    tweet = re.sub('[0-9]+', '', tweet)
-    #Remove letters from other languages
-    tweet = re.sub(r'[^\x00-\x7F]+', '', tweet)
-    #Remove non-letters
-    tweet = re.sub(r'[^A-Za-z0-9()!?\'\`\']', '', tweet)
-=======
     # Remove single characters
     tweet = re.sub(r'\b[a-zA-Z]\s','',tweet)
->>>>>>> 51f65a69effb615545471ed234c779a60aca22e7
 
     return tweet
 
