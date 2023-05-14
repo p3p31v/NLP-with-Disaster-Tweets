@@ -21,6 +21,10 @@ stop_words = set(stopwords.words('english'))
 #Function to remove irrelevant data
 def clean_tweet(tweet):
 
+    """
+    Regex expressions website https://regex101.com/
+    """
+
     # Capital letters to lowercase
     tweet = tweet.lower()
     # Remove URLs
@@ -32,11 +36,14 @@ def clean_tweet(tweet):
     # Remove punctuation
     tweet = re.sub('[%s]' % re.escape(string.punctuation), '', tweet)
     # Remove #RT
-    tweet = re.sub('rt','',tweet)
+    tweet = re.sub(r'\b(rt)\b','',tweet)
+    # Remove words containing numbers
+    tweet = re.sub('\w*\d\w*' , '', tweet)
+    # Remove single characters
+    tweet = re.sub(r'\b[a-zA-Z]\b','',tweet)
     # Remove stopwords
     tweet = ' '.join([word for word in tweet.split() if word not in stop_words])
-    # Remove single characters
-    tweet = re.sub(r'\b[a-zA-Z]\s','',tweet)
+ 
 
     return tweet
 
