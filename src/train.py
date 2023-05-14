@@ -43,7 +43,6 @@ def clean_tweet(tweet):
     tweet = re.sub(r'\b[a-zA-Z]\b','',tweet)
     # Remove stopwords
     tweet = ' '.join([word for word in tweet.split() if word not in stop_words])
- 
 
     return tweet
 
@@ -124,6 +123,24 @@ for fold_ in range(5):
 # Print average
 average = sum(f1_scores)/5
 print (f"Average: {average}")
+
+# Predict data
+preds = pd.read_csv("../input/nlp-getting-started/train.csv")
+
+# Clean columns in predictions file
+preds =preds.drop(['keyword','location'], axis=1)
+
+# We apply the function to remove irrelevant data to the text column of the test dataset
+preds['cleaned text'] = [clean_tweet(tweet) for tweet in preds['text']]
+
+# Convert test competition data to vectors
+predictions = count_vec.transform(preds["cleaned text"])
+
+# Predict 
+preds["predictions"] = model.predict(predictions)
+
+# Create predictions file
+preds.to_csv("../input/nlp-getting-started/predictions.csv", index=False)
 
 # Import sample submission
 sample_submission = pd.read_csv("../input/nlp-getting-started/sample_submission.csv")
