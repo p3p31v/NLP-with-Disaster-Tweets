@@ -49,9 +49,6 @@ def clean_tweet(tweet):
 # Import data
 df = pd.read_csv("../input/nlp-getting-started/train.csv")
 
-# We apply the fuction to remove irrelevant data to the keywords column of the train dataset
-df['keyword'] = [clean_keyword(keyword) for keyword in df['keyword']]
-
 # We apply the function to remove irrelevant data to the text column of the train dataset
 df['text'] = [clean_tweet(tweet) for tweet in df['text']]
     
