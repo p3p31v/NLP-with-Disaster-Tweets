@@ -121,9 +121,6 @@ sample_submission = pd.read_csv("../input/nlp-getting-started/sample_submission.
 # Import test competition data
 test = pd.read_csv("../input/nlp-getting-started/test.csv")
 
-# We apply the fuction to remove irrelevant data to the keywords column of the train dataset
-test['keyword'] = [clean_keyword(keyword) for keyword in test['keyword']]
-
 #We apply the function to remove irrelevant data to the text column of the test dataset
 test['text'] = [clean_tweet(tweet) for tweet in test['text']]
 
