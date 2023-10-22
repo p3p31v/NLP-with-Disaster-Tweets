@@ -47,7 +47,7 @@ def clean_tweet(tweet):
     return tweet
 
 # Import data
-df = pd.read_csv("../input/nlp-getting-started/train.csv")
+df = pd.read_csv("./input/nlp-getting-started/train.csv")
 
 # We apply the function to remove irrelevant data to the text column of the train dataset
 df['text'] = [clean_tweet(tweet) for tweet in df['text']]
@@ -116,10 +116,10 @@ average = sum(f1_scores)/5
 print (f"Average: {average}")
 
 # Import sample submission
-sample_submission = pd.read_csv("../input/nlp-getting-started/sample_submission.csv")
+sample_submission = pd.read_csv("./input/nlp-getting-started/sample_submission.csv")
 
 # Import test competition data
-test = pd.read_csv("../input/nlp-getting-started/test.csv")
+test = pd.read_csv("./input/nlp-getting-started/test.csv")
 
 #We apply the function to remove irrelevant data to the text column of the test dataset
 test['text'] = [clean_tweet(tweet) for tweet in test['text']]
