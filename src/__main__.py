@@ -47,8 +47,21 @@ def clean_tweet(tweet):
 
     return tweet
 
+<<<<<<< HEAD:src/train.py
 # Import data and randomize the rows of the data 
 df = pd.read_csv("../input/nlp-getting-started/train.csv")
+=======
+# Import data
+df = pd.read_csv("./input/nlp-getting-started/train.csv")
+
+# We apply the function to remove irrelevant data to the text column of the train dataset
+df['text'] = [clean_tweet(tweet) for tweet in df['text']]
+    
+# We create a new column called kfold and fill it with -1
+df["kfold"] = -1
+
+# The next step is to randomize the rows of the data 
+>>>>>>> 5d1fa94b18092abde3c8e68eedb6df3d6970a1fe:src/__main__.py
 df = df.sample(frac=1,random_state=42).reset_index(drop=True)
 
 # Split data
@@ -76,10 +89,10 @@ print (f"f1 score: {f1}")
 #joblib.dump(model,f"../models/model_{fold_}_{datetime.now()}")
 
 # Import sample submission
-sample_submission = pd.read_csv("../input/nlp-getting-started/sample_submission.csv")
+sample_submission = pd.read_csv("./input/nlp-getting-started/sample_submission.csv")
 
 # Import test competition data
-test = pd.read_csv("../input/nlp-getting-started/test.csv")
+test = pd.read_csv("./input/nlp-getting-started/test.csv")
 
 # Split data
 X_test = test.text
