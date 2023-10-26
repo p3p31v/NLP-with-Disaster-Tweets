@@ -47,10 +47,6 @@ def clean_tweet(tweet):
 
     return tweet
 
-<<<<<<< HEAD:src/train.py
-# Import data and randomize the rows of the data 
-df = pd.read_csv("../input/nlp-getting-started/train.csv")
-=======
 # Import data
 df = pd.read_csv("./input/nlp-getting-started/train.csv")
 
@@ -61,7 +57,6 @@ df['text'] = [clean_tweet(tweet) for tweet in df['text']]
 df["kfold"] = -1
 
 # The next step is to randomize the rows of the data 
->>>>>>> 5d1fa94b18092abde3c8e68eedb6df3d6970a1fe:src/__main__.py
 df = df.sample(frac=1,random_state=42).reset_index(drop=True)
 
 # Split data
