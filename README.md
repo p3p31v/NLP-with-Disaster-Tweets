@@ -3,7 +3,7 @@
 The notebooks offer solutions to the binary classification problem of identifying disaster or non-disaster tweets for the Kaggle competition "Natural Language Processing with Disaster Tweets"
 [link](https://www.kaggle.com/competitions/nlp-getting-started)
 
-## Prerequisites
+## Settings
 Create a virtual environment and execute the following line of code:
 
 ``` pip install -r requirements.txt ```
