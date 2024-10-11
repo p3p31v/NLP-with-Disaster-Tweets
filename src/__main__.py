@@ -45,6 +45,8 @@ def clean_tweet(tweet):
     tweet = re.sub('\w*\d\w*' , '', tweet)
     # Remove single characters
     tweet = re.sub(r'\b[a-zA-Z]\b','',tweet)
+    # Reduce repeated characters (e.g., "goooooaaaaal" to "goal")
+    tweet = re.sub(r'(.)\1{2,}', r'\1\1', tweet)
     # Remove stopwords
     tweet = ' '.join([word for word in tweet.split() if word not in stop_words])
 
