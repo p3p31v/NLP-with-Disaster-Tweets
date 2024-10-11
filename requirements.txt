@@ -33,7 +33,6 @@ fst-pso==1.8.1
 funcy==1.18
 FuzzyTM==2.0.5
 gast==0.5.4
-gensim==4.3.0
 google-auth==2.23.1
 google-auth-oauthlib==1.0.0
 google-pasta==0.2.0
