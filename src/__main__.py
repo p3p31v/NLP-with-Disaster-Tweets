@@ -53,7 +53,7 @@ def clean_tweet(tweet):
     return tweet
 
 # Import data
-df = pd.read_csv("./input/nlp-getting-started/train.csv")
+df = pd.read_csv("../input/nlp-getting-started/train.csv")
 
 # We apply the function to remove irrelevant data to the text column of the train dataset
 df['text'] = [clean_tweet(tweet) for tweet in df['text']]
@@ -113,10 +113,10 @@ print(f"F1 score with Word2Vec: {f1}")
 #joblib.dump(model,f"../models/model_{fold_}_{datetime.now()}")
 
 # Import sample submission
-sample_submission = pd.read_csv("./input/nlp-getting-started/sample_submission.csv")
+sample_submission = pd.read_csv("../input/nlp-getting-started/sample_submission.csv")
 
 # Import test competition data
-test = pd.read_csv("./input/nlp-getting-started/test.csv")
+test = pd.read_csv("../input/nlp-getting-started/test.csv")
 
 # Split data
 X_test = test.text
